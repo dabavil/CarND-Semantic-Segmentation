@@ -100,4 +100,12 @@ ENV/
 # mypy
 .mypy_cache/
 
+# DS files
+*.DS_store
+
+#Logs
+/logs
+
+
+
 RUNS/
