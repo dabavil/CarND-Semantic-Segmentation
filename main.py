@@ -129,7 +129,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     # TODO: Implement function
 
     learn_rate = 0.001
-    keep_prob_train = 0.8
+    keep_prob_train = 0.5
   
 
     print("Starting the training\n")
