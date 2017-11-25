@@ -130,8 +130,8 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # TODO: Implement function
 
-    learn_rate = 0.00005
-    keep_prob_train = 0.5
+    learn_rate = 0.0001
+    keep_prob_train = 0.6
   
 
     print("Starting the training\n")
@@ -160,7 +160,7 @@ def run():
     tests.test_for_kitti_dataset(data_dir)
 
     EPOCHS = 6
-    BATCH_SIZE = 10
+    BATCH_SIZE = 9
 
     # Download pretrained vgg model
     helper.maybe_download_pretrained_vgg(data_dir)
