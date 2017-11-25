@@ -62,7 +62,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
     # TODO: Implement function
 
-    REG_RATE = 1e-2
+    REG_RATE = 5e-3
 
     convo_1by1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(1,1))
 
@@ -130,7 +130,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # TODO: Implement function
 
-    learn_rate = 0.0001
+    learn_rate = 0.00005
     keep_prob_train = 0.5
   
 
@@ -159,7 +159,7 @@ def run():
     logs_dir = './logs'
     tests.test_for_kitti_dataset(data_dir)
 
-    EPOCHS = 5
+    EPOCHS = 6
     BATCH_SIZE = 10
 
     # Download pretrained vgg model
