@@ -71,7 +71,6 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     upsample1 = tf.layers.conv2d_transpose(convo_1by1, skip_layer_size[3], 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
 
     # first skip connection -  from layer 4
-    # convo_1by1_l4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
     skip1 = tf.add(upsample1, vgg_layer4_out)
 
     skip_layer_size = vgg_layer3_out.get_shape()
@@ -79,7 +78,6 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     upsample2 = tf.layers.conv2d_transpose(skip1, skip_layer_size[3], 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
 
     # second skip connection -  from layer 3
-    # convo_1by1_l3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
     skip2 = tf.add(upsample2, vgg_layer3_out)
 
     upsample3 = tf.layers.conv2d_transpose(skip2, num_classes, 16, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(8, 8))
@@ -137,6 +135,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
   
 
     print("Starting the training\n")
+    print("Today we'll do ", epochs, " in ", batches, " batches")
     for i in range(epochs):
         print("Training epoch: {}".format(i+1))
         bt_count = 0
@@ -161,7 +160,7 @@ def run():
     tests.test_for_kitti_dataset(data_dir)
 
     EPOCHS = 6
-    BATCH_SIZE = 3
+    BATCH_SIZE = 20
 
     # Download pretrained vgg model
     helper.maybe_download_pretrained_vgg(data_dir)
