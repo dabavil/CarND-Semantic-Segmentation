@@ -66,17 +66,21 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     convo_1by1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(1,1))
 
-    upsample1 = tf.layers.conv2d_transpose(convo_1by1, num_classes, 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
+    skip_layer_size = vgg_layer4_out.get_shape()
+
+    upsample1 = tf.layers.conv2d_transpose(convo_1by1, skip_layer_size[3], 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
 
     # first skip connection -  from layer 4
-    convo_1by1_l4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
-    skip1 = tf.add(upsample1, convo_1by1_l4)
+    # convo_1by1_l4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
+    skip1 = tf.add(upsample1, vgg_layer4_out)
 
-    upsample2 = tf.layers.conv2d_transpose(skip1, num_classes, 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
+    skip_layer_size = vgg_layer3_out.get_shape()
+
+    upsample2 = tf.layers.conv2d_transpose(skip1, skip_layer_size[3], 4, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(2, 2))
 
     # second skip connection -  from layer 3
-    convo_1by1_l3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
-    skip2 = tf.add(upsample2, convo_1by1_l3)
+    # convo_1by1_l3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, strides=(1,1), padding = 'same' , kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE))
+    skip2 = tf.add(upsample2, vgg_layer3_out)
 
     upsample3 = tf.layers.conv2d_transpose(skip2, num_classes, 16, padding = 'same', kernel_regularizer = tf.contrib.layers.l2_regularizer(REG_RATE), strides=(8, 8))
 
@@ -98,7 +102,7 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
 
     logits = tf.reshape(nn_last_layer, (-1, num_classes))
 
-    labels = tf.to_float(tf.reshape(correct_label, (-1, num_classes)))
+    labels = tf.reshape(correct_label, (-1, num_classes))
     cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 
     optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)
@@ -128,7 +132,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # TODO: Implement function
 
-    learn_rate = 0.001
+    learn_rate = 0.0001
     keep_prob_train = 0.5
   
 
@@ -156,8 +160,8 @@ def run():
     logs_dir = './logs'
     tests.test_for_kitti_dataset(data_dir)
 
-    EPOCHS = 10
-    BATCH_SIZE = 20
+    EPOCHS = 6
+    BATCH_SIZE = 3
 
     # Download pretrained vgg model
     helper.maybe_download_pretrained_vgg(data_dir)
