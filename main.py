@@ -135,7 +135,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
   
 
     print("Starting the training\n")
-    print("Today we'll do ", epochs, " in ", batches, " batches")
+    print("Welcome to AWS & chill! Today we'll do ", epochs, " epochs in batches of size ", batch_size)
     for i in range(epochs):
         print("Training epoch: {}".format(i+1))
         bt_count = 0
@@ -159,8 +159,8 @@ def run():
     logs_dir = './logs'
     tests.test_for_kitti_dataset(data_dir)
 
-    EPOCHS = 6
-    BATCH_SIZE = 20
+    EPOCHS = 5
+    BATCH_SIZE = 10
 
     # Download pretrained vgg model
     helper.maybe_download_pretrained_vgg(data_dir)
